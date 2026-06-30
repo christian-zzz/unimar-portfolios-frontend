@@ -146,11 +146,11 @@ export default function ProfilePage() {
   return (
     <div className="space-y-8 animate-fade-in font-sans pb-12">
       {/* Header section */}
-      <div className="border-b border-border pb-6">
-        <h2 className="text-2xl font-bold tracking-tight text-slate-800 dark:text-slate-100 sm:text-3xl">
+      <div className="border-b border-[#2A2640] pb-6">
+        <h2 className="text-3xl font-bold tracking-tight text-white">
           Mi Perfil
         </h2>
-        <p className="text-sm text-muted mt-1.5 leading-relaxed">
+        <p className="text-sm text-muted mt-2 leading-relaxed">
           Administra tu información personal y fortalece la seguridad de tu cuenta.
         </p>
       </div>
@@ -158,14 +158,14 @@ export default function ProfilePage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         
         {/* Card 1: Personal Info */}
-        <div className="bg-surface border border-border rounded-2xl p-6 sm:p-8 shadow-xs flex flex-col justify-between transition-colors duration-200">
+        <div className="bg-[#1C1835] border border-[#2A2640] rounded-2xl p-6 sm:p-8 shadow-xs flex flex-col justify-between transition-colors duration-200">
           <div className="space-y-6">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-light border border-brand/10 text-brand dark:bg-brand-light/10">
-                <UserIcon className="h-5 w-5" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#273E92]/20 border border-[#273E92]/30 text-white">
+                <UserIcon className="h-5 w-5 text-[#ED6C31]" />
               </div>
               <div>
-                <h3 className="text-base font-semibold text-slate-800 dark:text-slate-100">
+                <h3 className="text-base font-semibold text-white">
                   Información Personal
                 </h3>
                 <p className="text-xs text-muted">
@@ -176,7 +176,7 @@ export default function ProfilePage() {
 
             {/* Success Alert */}
             {profileSuccess && (
-              <div className="flex items-start gap-2.5 bg-emerald-50 border border-emerald-200 text-emerald-700 dark:bg-emerald-950/20 dark:border-emerald-900/50 dark:text-emerald-400 rounded-xl p-4 text-xs animate-fade-in">
+              <div className="flex items-start gap-2.5 bg-emerald-950/20 border border-emerald-900/50 text-emerald-400 rounded-xl p-4 text-xs animate-fade-in">
                 <CheckCircle className="h-4 w-4 shrink-0 text-emerald-500 mt-0.5" />
                 <span>{profileSuccess}</span>
               </div>
@@ -184,7 +184,7 @@ export default function ProfilePage() {
 
             {/* Error Alert */}
             {profileError && (
-              <div className="flex items-start gap-2.5 bg-red-50 border border-red-200 text-red-700 dark:bg-red-950/20 dark:border-red-900/50 dark:text-red-400 rounded-xl p-4 text-xs animate-fade-in">
+              <div className="flex items-start gap-2.5 bg-red-950/20 border border-red-900/50 text-red-400 rounded-xl p-4 text-xs animate-fade-in">
                 <AlertCircle className="h-4 w-4 shrink-0 text-red-500 mt-0.5" />
                 <span>{profileError}</span>
               </div>
@@ -193,7 +193,7 @@ export default function ProfilePage() {
             <form onSubmit={handleProfileSubmit} className="space-y-4">
               {/* Name Input */}
               <div className="space-y-1.5">
-                <label htmlFor="profileName" className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                <label htmlFor="profileName" className="text-xs font-semibold text-slate-300">
                   Nombre completo
                 </label>
                 <input
@@ -204,13 +204,13 @@ export default function ProfilePage() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Jane Doe"
-                  className="w-full text-sm text-slate-800 dark:text-slate-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-500 bg-surface border border-border rounded-lg px-3.5 py-2.5 focus:outline-hidden focus:border-brand focus:ring-2 focus:ring-brand/10 transition duration-150 disabled:bg-zinc-50 dark:disabled:bg-zinc-800/50 disabled:text-slate-500 dark:disabled:text-slate-400"
+                  className="w-full text-sm text-white placeholder:text-zinc-500 bg-[#141127] border border-[#2A2640] rounded-lg px-3.5 py-2.5 focus:outline-hidden focus:border-[#273E92] transition duration-150 disabled:opacity-50"
                 />
               </div>
 
               {/* Email Input */}
               <div className="space-y-1.5">
-                <label htmlFor="profileEmail" className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                <label htmlFor="profileEmail" className="text-xs font-semibold text-slate-300">
                   Correo electrónico
                 </label>
                 <input
@@ -221,22 +221,22 @@ export default function ProfilePage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="jane.doe@unimar.edu.ve"
-                  className="w-full text-sm text-slate-800 dark:text-slate-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-500 bg-surface border border-border rounded-lg px-3.5 py-2.5 focus:outline-hidden focus:border-brand focus:ring-2 focus:ring-brand/10 transition duration-150 disabled:bg-zinc-50 dark:disabled:bg-zinc-800/50 disabled:text-slate-500 dark:disabled:text-slate-400"
+                  className="w-full text-sm text-white placeholder:text-zinc-500 bg-[#141127] border border-[#2A2640] rounded-lg px-3.5 py-2.5 focus:outline-hidden focus:border-[#273E92] transition duration-150 disabled:opacity-50"
                 />
               </div>
 
               {/* Submit Button or Student Info Alert */}
               {user.role === "student" ? (
-                <div className="pt-4 border-t border-border flex items-start gap-2.5 bg-zinc-50 dark:bg-zinc-900/30 border border-border p-3.5 rounded-xl text-xs text-muted leading-relaxed">
-                  <AlertCircle className="h-4 w-4 shrink-0 text-brand mt-0.5" />
+                <div className="pt-4 border-t border-[#2A2640] flex items-start gap-2.5 bg-zinc-900/30 border border-[#2A2640] p-3.5 rounded-xl text-xs text-muted leading-relaxed">
+                  <AlertCircle className="h-4 w-4 shrink-0 text-[#273E92] mt-0.5" />
                   <span>Los estudiantes no pueden modificar su nombre o correo institucional. Si necesitas realizar un cambio, contacta al decanato.</span>
                 </div>
               ) : (
-                <div className="pt-4 border-t border-border flex justify-end">
+                <div className="pt-4 border-t border-[#2A2640] flex justify-end">
                   <button
                     type="submit"
                     disabled={isLoadingProfile}
-                    className="flex items-center gap-2 px-5 py-2.5 text-xs font-semibold text-white bg-brand hover:bg-brand-hover disabled:bg-brand/50 rounded-lg shadow-xs transition duration-150 cursor-pointer"
+                    className="flex items-center gap-2 px-5 py-2.5 text-xs font-semibold text-white bg-[#273E92] hover:bg-[#273E92]/95 disabled:bg-[#273E92]/50 rounded-lg shadow-xs transition duration-150 cursor-pointer"
                   >
                     {isLoadingProfile ? (
                       <>
@@ -254,14 +254,14 @@ export default function ProfilePage() {
         </div>
 
         {/* Card 2: Password Security */}
-        <div className="bg-surface border border-border rounded-2xl p-6 sm:p-8 shadow-xs flex flex-col justify-between transition-colors duration-200">
+        <div className="bg-[#1C1835] border border-[#2A2640] rounded-2xl p-6 sm:p-8 shadow-xs flex flex-col justify-between transition-colors duration-200">
           <div className="space-y-6">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-light border border-brand/10 text-brand dark:bg-brand-light/10">
-                <Key className="h-5 w-5" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#273E92]/20 border border-[#273E92]/30 text-white">
+                <Key className="h-5 w-5 text-[#ED6C31]" />
               </div>
               <div>
-                <h3 className="text-base font-semibold text-slate-800 dark:text-slate-100">
+                <h3 className="text-base font-semibold text-white">
                   Seguridad
                 </h3>
                 <p className="text-xs text-muted">
@@ -272,7 +272,7 @@ export default function ProfilePage() {
 
             {/* Success Alert */}
             {passwordSuccess && (
-              <div className="flex items-start gap-2.5 bg-emerald-50 border border-emerald-200 text-emerald-700 dark:bg-emerald-950/20 dark:border-emerald-900/50 dark:text-emerald-400 rounded-xl p-4 text-xs animate-fade-in">
+              <div className="flex items-start gap-2.5 bg-emerald-950/20 border border-emerald-900/50 text-emerald-400 rounded-xl p-4 text-xs animate-fade-in">
                 <CheckCircle className="h-4 w-4 shrink-0 text-emerald-500 mt-0.5" />
                 <span>{passwordSuccess}</span>
               </div>
@@ -280,7 +280,7 @@ export default function ProfilePage() {
 
             {/* Error Alert */}
             {passwordError && (
-              <div className="flex items-start gap-2.5 bg-red-50 border border-red-200 text-red-700 dark:bg-red-950/20 dark:border-red-900/50 dark:text-red-400 rounded-xl p-4 text-xs animate-fade-in">
+              <div className="flex items-start gap-2.5 bg-red-950/20 border border-red-900/50 text-red-400 rounded-xl p-4 text-xs animate-fade-in">
                 <AlertCircle className="h-4 w-4 shrink-0 text-red-500 mt-0.5" />
                 <span>{passwordError}</span>
               </div>
@@ -289,7 +289,7 @@ export default function ProfilePage() {
             <form onSubmit={handlePasswordSubmit} className="space-y-4">
               {/* Current Password Input */}
               <div className="space-y-1.5">
-                <label htmlFor="currentPassword" className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                <label htmlFor="currentPassword" className="text-xs font-semibold text-slate-300">
                   Contraseña actual
                 </label>
                 <input
@@ -300,13 +300,13 @@ export default function ProfilePage() {
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full text-sm text-slate-800 dark:text-slate-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-500 bg-surface border border-border rounded-lg px-3.5 py-2.5 focus:outline-hidden focus:border-brand focus:ring-2 focus:ring-brand/10 transition duration-150 disabled:bg-zinc-50 dark:disabled:bg-zinc-800/50"
+                  className="w-full text-sm text-white placeholder:text-zinc-500 bg-[#141127] border border-[#2A2640] rounded-lg px-3.5 py-2.5 focus:outline-hidden focus:border-[#273E92] transition duration-150 disabled:opacity-50"
                 />
               </div>
 
               {/* New Password Input */}
               <div className="space-y-1.5">
-                <label htmlFor="newPassword" className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                <label htmlFor="newPassword" className="text-xs font-semibold text-slate-300">
                   Nueva contraseña
                 </label>
                 <input
@@ -317,13 +317,13 @@ export default function ProfilePage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full text-sm text-slate-800 dark:text-slate-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-500 bg-surface border border-border rounded-lg px-3.5 py-2.5 focus:outline-hidden focus:border-brand focus:ring-2 focus:ring-brand/10 transition duration-150 disabled:bg-zinc-50 dark:disabled:bg-zinc-800/50"
+                  className="w-full text-sm text-white placeholder:text-zinc-500 bg-[#141127] border border-[#2A2640] rounded-lg px-3.5 py-2.5 focus:outline-hidden focus:border-[#273E92] transition duration-150 disabled:opacity-50"
                 />
               </div>
 
               {/* Password Confirmation Input */}
               <div className="space-y-1.5">
-                <label htmlFor="passwordConfirm" className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                <label htmlFor="passwordConfirm" className="text-xs font-semibold text-slate-300">
                   Confirmar nueva contraseña
                 </label>
                 <input
@@ -334,16 +334,16 @@ export default function ProfilePage() {
                   value={passwordConfirmation}
                   onChange={(e) => setPasswordConfirmation(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full text-sm text-slate-800 dark:text-slate-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-500 bg-surface border border-border rounded-lg px-3.5 py-2.5 focus:outline-hidden focus:border-brand focus:ring-2 focus:ring-brand/10 transition duration-150 disabled:bg-zinc-50 dark:disabled:bg-zinc-800/50"
+                  className="w-full text-sm text-white placeholder:text-zinc-500 bg-[#141127] border border-[#2A2640] rounded-lg px-3.5 py-2.5 focus:outline-hidden focus:border-[#273E92] transition duration-150 disabled:opacity-50"
                 />
               </div>
 
               {/* Submit Button */}
-              <div className="pt-4 border-t border-border flex justify-end">
+              <div className="pt-4 border-t border-[#2A2640] flex justify-end">
                 <button
                   type="submit"
                   disabled={isLoadingPassword}
-                  className="flex items-center gap-2 px-5 py-2.5 text-xs font-semibold text-white bg-brand hover:bg-brand-hover disabled:bg-brand/50 rounded-lg shadow-xs transition duration-150 cursor-pointer"
+                  className="flex items-center gap-2 px-5 py-2.5 text-xs font-semibold text-white bg-[#273E92] hover:bg-[#273E92]/95 disabled:bg-[#273E92]/50 rounded-lg shadow-xs transition duration-150 cursor-pointer"
                 >
                   {isLoadingPassword ? (
                     <>

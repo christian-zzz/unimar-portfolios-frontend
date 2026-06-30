@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Poppins, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const poppins = Poppins({
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
   subsets: ["latin"],
+  variable: "--font-poppins",
 });
 
 const geistMono = Geist_Mono({
@@ -13,9 +15,30 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const tacticRound = localFont({
+  src: [
+    {
+      path: "./fonts/TacticRoundExtExd-Reg.woff2",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "./fonts/TacticRoundExtExd-Med.woff2",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "./fonts/TacticRoundExtExd-Bld.woff2",
+      weight: "700",
+      style: "normal",
+    },
+  ],
+  variable: "--font-tactic",
+});
+
 export const metadata: Metadata = {
-  title: "UNIMAR Portfolios - Student Dashboard",
-  description: "Low-Code/No-Code portfolio building platform for UNIMAR graphic design students.",
+  title: "Folium",
+  description: "Plataforma LCNC de portafolios de diseño gráfico de UNIMAR.",
 };
 
 export default function RootLayout({
@@ -26,9 +49,9 @@ export default function RootLayout({
   return (
     <html
       lang="es" suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${poppins.variable} ${geistMono.variable} ${tacticRound.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-background text-foreground transition-colors duration-200">
+      <body className="min-h-full flex flex-col bg-background text-foreground transition-colors duration-200" id="top">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {children}
         </ThemeProvider>

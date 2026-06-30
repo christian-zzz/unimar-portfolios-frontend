@@ -2,12 +2,11 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Compass, AlertCircle, Loader2 } from "lucide-react";
+import { Mail, Lock, ArrowRight, AlertCircle, Loader2 } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
   
-  // State variables
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -33,13 +32,10 @@ export default function LoginPage() {
       const data = await response.json();
 
       if (response.ok) {
-        // Save token and user details to localStorage
         localStorage.setItem("token", data.token);
         if (data.user) {
           localStorage.setItem("user", JSON.stringify(data.user));
         }
-        
-        // Redirect to student workspace dashboard
         router.push("/dashboard");
       } else if (response.status === 401) {
         setErrorMessage("Credenciales inválidas.");
@@ -57,101 +53,117 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 flex items-center justify-center px-4 sm:px-6 lg:px-8 font-sans transition-colors duration-200">
-      <div className="w-full max-w-md space-y-8">
-        
-        {/* Visual Brand Header */}
-        <div className="flex flex-col items-center text-center">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-light border border-brand/10 text-brand dark:bg-brand-light/10">
-            <Compass className="h-6 w-6" />
+    <main className="min-h-screen w-full flex bg-[#141127] text-white font-sans overflow-hidden">
+      
+      {/* Left panel - Orange brand canvas */}
+      <div className="hidden md:flex md:w-[45%] bg-gradient-to-b from-[#ED6C31] via-[#ab4c1f] to-[#141127] items-center justify-center relative p-12 select-none">
+        <div className="relative z-10 text-center animate-fade-in">
+          {/* Custom logo designed to resemble the image shape */}
+          <div className="flex items-center font-tactic text-7xl font-black text-[#141127] tracking-tight">
+            <span>Folium</span>
+            <span className="text-[#141127] font-sans font-light">.</span>
           </div>
-          <h2 className="mt-6 text-2xl font-semibold tracking-tight text-slate-800 dark:text-slate-100">
-            UNIMAR Portfolios
-          </h2>
-          <p className="mt-1.5 text-xs text-muted max-w-xs leading-relaxed">
-            Ingresa tus credenciales para acceder a tu espacio de diseño y administrar tu portafolio.
-          </p>
         </div>
+      </div>
 
-        {/* Minimal Login Card */}
-        <div className="bg-surface rounded-2xl border border-border p-6 sm:p-8 shadow-xs">
+      {/* Right panel - Night Blue Card Area */}
+      <div className="w-full md:w-[55%] flex items-center justify-center p-6 sm:p-12 relative select-none">
+        
+        {/* Card Form */}
+        <div className="w-full max-w-[420px] bg-[#1F1A3D] rounded-[24px] p-8 sm:p-10 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.6)] relative z-10 border border-[#2D2852]/60">
           
-          {/* Subtle error banner */}
+          <div className="mb-8 select-text">
+            <h2 className="text-3xl font-bold tracking-tight text-white font-sans">
+              Iniciar sesión
+            </h2>
+            <p className="text-xs text-[#E9A88C] mt-2 font-medium leading-relaxed">
+              Ingresa tus datos para comenzar tu viaje creativo.
+            </p>
+          </div>
+
           {errorMessage && (
-            <div className="mb-6 flex items-start gap-2.5 bg-red-50 border border-red-200 text-red-700 dark:bg-red-950/20 dark:border-red-900/50 dark:text-red-400 rounded-xl p-3.5 text-xs animate-fade-in">
-              <AlertCircle className="h-4 w-4 shrink-0 text-red-500 mt-0.5" />
+            <div className="mb-6 flex items-start gap-2.5 bg-red-950/40 border border-red-900/60 text-red-400 rounded-xl p-3.5 text-xs animate-fade-in">
+              <AlertCircle className="h-4.5 w-4.5 shrink-0 text-red-500 mt-0.5" />
               <span>{errorMessage}</span>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            
             {/* Email Field */}
-            <div className="space-y-1.5">
-              <label htmlFor="email" className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                Correo electrónico
+            <div className="space-y-2">
+              <label htmlFor="email" className="text-[10px] font-bold uppercase tracking-wider text-[#E9A88C] block">
+                Email
               </label>
-              <input
-                id="email"
-                type="email"
-                required
-                autoComplete="email"
-                disabled={isLoading}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="ejemplo@unimar.edu.ve"
-                className="w-full text-sm text-slate-800 dark:text-slate-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-500 bg-surface border border-border rounded-lg px-3.5 py-2 focus:outline-hidden focus:border-brand focus:ring-2 focus:ring-brand/10 transition duration-150 disabled:bg-zinc-50 dark:disabled:bg-zinc-800/50"
-              />
+              <div className="relative">
+                <span className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <Mail className="h-4.5 w-4.5 text-[#E9A88C] opacity-80" />
+                </span>
+                <input
+                  id="email"
+                  type="email"
+                  required
+                  disabled={isLoading}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="jane@studio.com"
+                  className="w-full text-xs text-white placeholder:text-zinc-550 bg-[#141127] border border-[#2D2852] rounded-xl pl-12 pr-4 py-3.5 focus:outline-hidden focus:border-[#ED6C31] focus:ring-1 focus:ring-[#ED6C31] transition duration-150 disabled:opacity-50 select-text"
+                />
+              </div>
             </div>
 
             {/* Password Field */}
-            <div className="space-y-1.5">
-              <div className="flex justify-between items-center">
-                <label htmlFor="password" className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                  Contraseña
-                </label>
-                <a href="#" className="text-[10px] text-brand hover:underline font-semibold">
-                  ¿Olvidaste tu contraseña?
-                </a>
+            <div className="space-y-2">
+              <label htmlFor="password" className="text-[10px] font-bold uppercase tracking-wider text-[#E9A88C] block">
+                Password
+              </label>
+              <div className="relative">
+                <span className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <Lock className="h-4.5 w-4.5 text-[#E9A88C] opacity-80" />
+                </span>
+                <input
+                  id="password"
+                  type="password"
+                  required
+                  disabled={isLoading}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  className="w-full text-xs text-white placeholder:text-zinc-550 bg-[#141127] border border-[#2D2852] rounded-xl pl-12 pr-4 py-3.5 focus:outline-hidden focus:border-[#ED6C31] focus:ring-1 focus:ring-[#ED6C31] transition duration-150 disabled:opacity-50 select-text"
+                />
               </div>
-              <input
-                id="password"
-                type="password"
-                required
-                autoComplete="current-password"
-                disabled={isLoading}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="w-full text-sm text-slate-800 dark:text-slate-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-500 bg-surface border border-border rounded-lg px-3.5 py-2 focus:outline-hidden focus:border-brand focus:ring-2 focus:ring-brand/10 transition duration-150 disabled:bg-zinc-50 dark:disabled:bg-zinc-800/50"
-              />
             </div>
 
             {/* Submit Button */}
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full flex items-center justify-center gap-2 mt-2 px-4 py-2.5 text-xs font-semibold text-white bg-brand hover:bg-brand-hover disabled:bg-brand/50 rounded-lg shadow-xs transition duration-150 cursor-pointer"
+              className="w-full flex items-center justify-center gap-2 mt-4 px-6 py-4 text-xs font-bold uppercase tracking-widest text-white bg-[#ED6C31] hover:bg-[#d85c24] disabled:bg-opacity-50 rounded-full shadow-lg transition duration-150 cursor-pointer"
             >
               {isLoading ? (
                 <>
-                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  <Loader2 className="h-4 w-4 animate-spin text-white" />
                   Verificando...
                 </>
               ) : (
-                "Iniciar Sesión"
+                <>
+                  <span>Inicia sesión</span>
+                  <ArrowRight className="h-4 w-4" />
+                </>
               )}
             </button>
           </form>
-        </div>
 
-        {/* Footer helper links */}
-        <div className="text-center">
-          <p className="text-[11px] text-muted">
-            ¿No tienes cuenta? Contacta al administrador del decanato para solicitar una.
-          </p>
+          {/* Footer Text */}
+          <div className="text-center mt-10 select-text">
+            <span className="text-sm text-zinc-400 font-medium">
+              ¿No tienes cuenta? <span className="text-[#ED6C31] font-semibold">Contacta a tu decanato</span>
+            </span>
+          </div>
+
         </div>
 
       </div>
-    </div>
+    </main>
   );
 }

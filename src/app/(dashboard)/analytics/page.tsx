@@ -91,23 +91,23 @@ export default function AnalyticsPage() {
   }, []);
 
   return (
-    <div className="space-y-8 animate-fade-in font-sans">
+    <div className="space-y-8 animate-fade-in font-sans pb-12">
       
       {/* Header and Back Button */}
       <div className="space-y-2">
         <Link 
           href="/dashboard" 
-          className="inline-flex items-center gap-1 text-xs font-semibold text-muted hover:text-foreground transition-colors"
+          className="inline-flex items-center gap-1 text-xs font-semibold text-muted hover:text-white transition-colors"
         >
           <ArrowLeft className="h-3 w-3" />
           Volver al Inicio
         </Link>
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between border-b border-[#2A2640] pb-6">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-slate-800 dark:text-slate-100">
+            <h1 className="text-3xl font-bold tracking-tight text-white">
               Analíticas del Portafolio
             </h1>
-            <p className="text-xs text-muted leading-relaxed mt-1">
+            <p className="text-sm text-muted mt-2 leading-relaxed">
               Visualización interactiva en tiempo real sobre el tráfico y comportamiento de visitas de tu portafolio.
             </p>
           </div>
@@ -116,7 +116,7 @@ export default function AnalyticsPage() {
             type="button"
             onClick={fetchReport}
             disabled={isLoading}
-            className="inline-flex items-center gap-1.5 self-start sm:self-auto px-3.5 py-2 text-xs font-bold text-brand hover:text-brand-hover bg-surface dark:bg-zinc-800 border border-border rounded-xl shadow-2xs hover:shadow-xs transition-all duration-200 cursor-pointer disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 self-start sm:self-auto px-4 py-2.5 text-xs font-bold text-white bg-[#273E92] hover:bg-[#273E92]/95 border border-[#2A2640] rounded-xl transition-all duration-200 cursor-pointer disabled:opacity-50"
           >
             <RefreshCw className={`h-3.5 w-3.5 ${isLoading ? "animate-spin" : ""}`} />
             Actualizar Datos
@@ -125,9 +125,9 @@ export default function AnalyticsPage() {
       </div>
 
       {isLoading ? (
-        <div className="flex flex-col items-center justify-center bg-surface border border-border rounded-3xl p-16 text-center">
+        <div className="flex flex-col items-center justify-center bg-[#1C1835] border border-[#2A2640] rounded-3xl p-16 text-center">
           <Loader2 className="h-8 w-8 animate-spin text-brand mb-4" />
-          <p className="text-sm font-semibold text-slate-850 dark:text-slate-200">
+          <p className="text-sm font-semibold text-white">
             Cargando analíticas...
           </p>
           <p className="text-xs text-muted mt-1">
@@ -135,11 +135,11 @@ export default function AnalyticsPage() {
           </p>
         </div>
       ) : error ? (
-        <div className="flex flex-col items-center justify-center bg-surface border border-border rounded-3xl p-12 text-center">
-          <div className="h-12 w-12 rounded-2xl bg-red-50 dark:bg-red-950/20 text-red-500 flex items-center justify-center mb-4">
+        <div className="flex flex-col items-center justify-center bg-[#1C1835] border border-[#2A2640] rounded-3xl p-12 text-center">
+          <div className="h-12 w-12 rounded-2xl bg-red-950/20 text-red-400 flex items-center justify-center mb-4 border border-red-900/35">
             <AlertCircle className="h-6 w-6" />
           </div>
-          <h3 className="text-sm font-bold text-slate-850 dark:text-slate-100 uppercase tracking-wider">
+          <h3 className="text-sm font-bold text-white uppercase tracking-wider">
             Error de Conexión
           </h3>
           <p className="text-xs text-muted max-w-md mt-2 leading-relaxed">
@@ -148,7 +148,7 @@ export default function AnalyticsPage() {
           <button
             type="button"
             onClick={fetchReport}
-            className="mt-6 inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold text-white bg-brand hover:bg-brand-hover rounded-xl shadow-xs cursor-pointer"
+            className="mt-6 inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold text-white bg-[#273E92] hover:bg-[#273E92]/95 rounded-xl shadow-xs cursor-pointer"
           >
             <RefreshCw className="h-3.5 w-3.5" />
             Reintentar Conexión
@@ -161,63 +161,63 @@ export default function AnalyticsPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             
             {/* Metric 1: Active Users */}
-            <div className="bg-surface border border-border rounded-2xl p-6 transition-colors duration-200">
+            <div className="bg-gradient-to-b from-[#1C1835] to-[#141127] border border-[#2A2640] rounded-2xl p-6 transition-colors duration-200">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-wider text-muted">
+                  <p className="text-xs font-bold uppercase tracking-wider text-[#8E8D9B]">
                     Usuarios Activos (15 días)
                   </p>
-                  <h3 className="text-3xl font-extrabold text-slate-850 dark:text-slate-100 mt-2">
+                  <h3 className="text-3xl font-extrabold text-white mt-2">
                     {data.totals.activeUsers}
                   </h3>
-                  <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1 mt-1">
-                    <TrendingUp className="h-3 w-3" />
+                  <p className="text-[10px] text-emerald-400 font-semibold flex items-center gap-1 mt-1">
+                    <TrendingUp className="h-3 w-3 text-[#ED6C31]" />
                     Visitantes únicos interactuando
                   </p>
                 </div>
-                <div className="h-12 w-12 rounded-xl bg-brand-light dark:bg-brand-light/10 border border-brand/10 text-brand flex items-center justify-center">
-                  <Users className="h-5.5 w-5.5" />
+                <div className="h-12 w-12 rounded-xl bg-[#273E92]/20 border border-[#273E92]/30 text-white flex items-center justify-center">
+                  <Users className="h-5.5 w-5.5 text-[#ED6C31]" />
                 </div>
               </div>
             </div>
 
             {/* Metric 2: Page Views */}
-            <div className="bg-surface border border-border rounded-2xl p-6 transition-colors duration-200">
+            <div className="bg-gradient-to-b from-[#1C1835] to-[#141127] border border-[#2A2640] rounded-2xl p-6 transition-colors duration-200">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-wider text-muted">
+                  <p className="text-xs font-bold uppercase tracking-wider text-[#8E8D9B]">
                     Vistas de Página (15 días)
                   </p>
-                  <h3 className="text-3xl font-extrabold text-slate-850 dark:text-slate-100 mt-2">
+                  <h3 className="text-3xl font-extrabold text-white mt-2">
                     {data.totals.screenPageViews}
                   </h3>
-                  <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1 mt-1">
-                    <TrendingUp className="h-3 w-3" />
+                  <p className="text-[10px] text-emerald-400 font-semibold flex items-center gap-1 mt-1">
+                    <TrendingUp className="h-3 w-3 text-[#ED6C31]" />
                     Visualizaciones totales de contenido
                   </p>
                 </div>
-                <div className="h-12 w-12 rounded-xl bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-200 dark:border-indigo-500/20 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
-                  <Eye className="h-5.5 w-5.5" />
+                <div className="h-12 w-12 rounded-xl bg-[#273E92]/20 border border-[#273E92]/30 text-white flex items-center justify-center">
+                  <Eye className="h-5.5 w-5.5 text-[#ED6C31]" />
                 </div>
               </div>
             </div>
 
             {/* Metric 3: Bounce Rate */}
-            <div className="bg-surface border border-border rounded-2xl p-6 transition-colors duration-200">
+            <div className="bg-gradient-to-b from-[#1C1835] to-[#141127] border border-[#2A2640] rounded-2xl p-6 transition-colors duration-200">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-wider text-muted">
+                  <p className="text-xs font-bold uppercase tracking-wider text-[#8E8D9B]">
                     Tasa de Rebote
                   </p>
-                  <h3 className="text-3xl font-extrabold text-slate-850 dark:text-slate-100 mt-2">
+                  <h3 className="text-3xl font-extrabold text-white mt-2">
                     {data.totals.bounceRate}
                   </h3>
                   <p className="text-[10px] text-muted font-semibold flex items-center gap-1 mt-1">
                     Porcentaje de sesiones de una sola página
                   </p>
                 </div>
-                <div className="h-12 w-12 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
-                  <Percent className="h-5.5 w-5.5" />
+                <div className="h-12 w-12 rounded-xl bg-[#273E92]/20 border border-[#273E92]/30 text-white flex items-center justify-center">
+                  <Percent className="h-5.5 w-5.5 text-[#ED6C31]" />
                 </div>
               </div>
             </div>
@@ -225,10 +225,10 @@ export default function AnalyticsPage() {
           </div>
 
           {/* Interactive Chart Container */}
-          <div className="bg-surface border border-border rounded-3xl p-6 transition-colors duration-200">
+          <div className="bg-[#1C1835] border border-[#2A2640] rounded-3xl p-6 transition-colors duration-200">
             <div className="flex flex-col gap-1 md:flex-row md:items-center md:justify-between mb-6">
               <div>
-                <h3 className="text-sm font-bold text-slate-850 dark:text-slate-100 uppercase tracking-wider">
+                <h3 className="text-sm font-bold text-white uppercase tracking-wider">
                   Tráfico de Audiencia (Últimos 15 días)
                 </h3>
                 <p className="text-xs text-muted">
@@ -236,7 +236,7 @@ export default function AnalyticsPage() {
                 </p>
               </div>
               <div className="pt-2 md:pt-0 text-[10px] text-muted">
-                Visualizando datos para: <strong className="text-foreground">{user?.name}</strong>
+                Visualizando datos para: <strong className="text-white">{user?.name}</strong>
               </div>
             </div>
 
@@ -247,7 +247,7 @@ export default function AnalyticsPage() {
                     data={data.daily}
                     margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
                   >
-                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(120, 120, 120, 0.1)" />
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.05)" />
                     <XAxis 
                       dataKey="date" 
                       stroke="#888888" 
@@ -263,13 +263,13 @@ export default function AnalyticsPage() {
                     />
                     <Tooltip 
                       contentStyle={{ 
-                        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                        backgroundColor: '#141127',
                         borderRadius: '12px',
-                        border: '1px solid #e2e8f0',
+                        border: '1px solid #2A2640',
                         fontSize: '11px',
-                        color: '#0f172a'
+                        color: '#ffffff'
                       }}
-                      labelClassName="font-bold text-slate-850"
+                      labelClassName="font-bold text-white"
                     />
                     <Legend 
                       verticalAlign="top" 
@@ -280,13 +280,13 @@ export default function AnalyticsPage() {
                     <Bar 
                       name="Usuarios Únicos"
                       dataKey="users" 
-                      fill="#D97706" 
+                      fill="#ED6C31" 
                       radius={[4, 4, 0, 0]} 
                     />
                     <Bar 
                       name="Páginas Vistas"
                       dataKey="views" 
-                      fill="#4F46E5" 
+                      fill="#273E92" 
                       radius={[4, 4, 0, 0]} 
                     />
                   </BarChart>

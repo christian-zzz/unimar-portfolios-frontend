@@ -181,14 +181,6 @@ export default function AuditPage() {
     return parts.length > 0 ? parts : text;
   };
 
-  // Helper to color scores according to Google Lighthouse thresholds
-  const getScoreColor = (score: number | null) => {
-    if (score === null) return "text-zinc-400 border-zinc-200 dark:border-zinc-800";
-    if (score >= 90) return "text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-900/50 bg-emerald-50/20";
-    if (score >= 50) return "text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-900/50 bg-amber-50/20";
-    return "text-red-600 dark:text-red-400 border-red-200 dark:border-red-900/50 bg-red-50/20";
-  };
-
   // Check if any category is currently auditing
   const isAnyLoading = Object.values(states).some((s) => s.status === "loading");
 
@@ -208,20 +200,20 @@ export default function AuditPage() {
   return (
     <div className="space-y-8 animate-fade-in font-sans pb-12">
       {/* Header section */}
-      <div className="border-b border-border pb-6">
-        <h2 className="text-2xl font-bold tracking-tight text-slate-800 dark:text-slate-100 sm:text-3xl">
+      <div className="border-b border-[#2A2640] pb-6">
+        <h2 className="text-3xl font-bold tracking-tight text-white">
           Auditoría SEO y Rendimiento
         </h2>
-        <p className="text-sm text-muted mt-1.5 leading-relaxed">
+        <p className="text-sm text-muted mt-2 leading-relaxed">
           Ingresa la URL pública de tu portafolio para iniciar una auditoría de rendimiento y optimización de PageSpeed.
         </p>
       </div>
 
       {/* Audit Configuration Card */}
-      <div className="bg-surface border border-border rounded-2xl p-6 sm:p-8 shadow-xs transition-colors duration-200">
+      <div className="bg-[#1C1835] border border-[#2A2640] rounded-2xl p-6 sm:p-8 shadow-xs transition-colors duration-200">
         <form onSubmit={handleSubmit} className="space-y-4 max-w-xl">
           <div className="space-y-1.5">
-            <label htmlFor="targetUrl" className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+            <label htmlFor="targetUrl" className="text-xs font-semibold text-slate-300">
               URL del portafolio o sitio web
             </label>
             <div className="flex flex-col sm:flex-row gap-3">
@@ -233,12 +225,12 @@ export default function AuditPage() {
                 value={targetUrl}
                 onChange={(e) => setTargetUrl(e.target.value)}
                 placeholder="https://miportafolio.com"
-                className="flex-1 text-sm text-slate-800 dark:text-slate-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-500 bg-surface border border-border rounded-lg px-3.5 py-2.5 focus:outline-hidden focus:border-brand focus:ring-2 focus:ring-brand/10 transition duration-150 disabled:bg-zinc-50 dark:disabled:bg-zinc-800/50"
+                className="flex-1 text-sm text-white placeholder:text-zinc-500 bg-[#141127] border border-[#2A2640] rounded-lg px-3.5 py-2.5 focus:outline-hidden focus:border-[#273E92] transition duration-150 disabled:opacity-50"
               />
               <button
                 type="submit"
                 disabled={isAnyLoading}
-                className="flex items-center justify-center gap-2 px-5 py-2.5 text-xs font-semibold text-white bg-brand hover:bg-brand-hover disabled:bg-brand/50 rounded-lg shadow-xs transition duration-150 cursor-pointer whitespace-nowrap"
+                className="flex items-center justify-center gap-2 px-5 py-2.5 text-xs font-semibold text-white bg-[#273E92] hover:bg-[#273E92]/95 disabled:bg-[#273E92]/50 rounded-lg shadow-xs transition duration-150 cursor-pointer whitespace-nowrap"
               >
                 {isAnyLoading ? (
                   <>
@@ -275,17 +267,23 @@ export default function AuditPage() {
               return (
                 <div 
                   key={cat.key}
-                  className={`border rounded-2xl p-6 flex flex-col items-center justify-center text-center transition duration-150 min-h-[170px] relative ${
+                  className={`border rounded-2xl p-6 flex flex-col items-center justify-center text-center transition duration-150 min-h-[170px] relative bg-[#1C1835] ${
                     state.status === "error" 
-                      ? "border-red-200 dark:border-red-900 bg-red-50/20 text-red-600 dark:text-red-400"
-                      : getScoreColor(state.score)
+                      ? "border-red-900 bg-red-950/20 text-red-400"
+                      : state.score === null 
+                        ? "text-zinc-400 border-[#2A2640]"
+                        : state.score >= 90
+                          ? "text-emerald-400 border-emerald-900/50 bg-emerald-950/20"
+                          : state.score >= 50
+                            ? "text-amber-400 border-amber-900/50 bg-amber-950/20"
+                            : "text-red-400 border-red-900/50 bg-red-950/20"
                   }`}
                 >
                   <Icon className="h-5 w-5 mb-3 opacity-80" />
                   
                   {state.status === "loading" ? (
                     <div className="flex flex-col items-center justify-center gap-2 h-16">
-                      <Loader2 className="h-6 w-6 animate-spin text-brand" />
+                      <Loader2 className="h-6 w-6 animate-spin text-[#ED6C31]" />
                       <span className="text-[10px] text-muted">Auditando...</span>
                     </div>
                   ) : state.status === "error" ? (
@@ -294,7 +292,7 @@ export default function AuditPage() {
                       <button
                         type="button"
                         onClick={() => fetchCategory(targetUrl, cat.key)}
-                        className="flex items-center gap-1 text-[10px] font-bold text-brand hover:underline cursor-pointer"
+                        className="flex items-center gap-1 text-[10px] font-bold text-white hover:underline cursor-pointer"
                       >
                         <RefreshCw className="h-3 w-3 animate-pulse" />
                         Reintentar
@@ -306,7 +304,7 @@ export default function AuditPage() {
                     </div>
                   )}
 
-                  <span className="text-xs font-semibold mt-3 text-slate-700 dark:text-slate-300">{cat.title}</span>
+                  <span className="text-xs font-semibold mt-3 text-slate-350">{cat.title}</span>
                 </div>
               );
             })}
@@ -330,23 +328,23 @@ export default function AuditPage() {
               return (
                 <div key={cat.key} className="space-y-3 animate-slide-down">
                   {/* Subheader */}
-                  <div className="flex items-center gap-2 border-b border-border pb-2">
+                  <div className="flex items-center gap-2 border-b border-[#2A2640] pb-2">
                     <Icon className={`h-4.5 w-4.5 ${meta.color}`} />
-                    <h4 className="text-sm font-semibold text-slate-800 dark:text-slate-100">
+                    <h4 className="text-sm font-semibold text-white">
                       {meta.title}
                     </h4>
                     
                     {state.status === "loading" ? (
-                      <span className="flex items-center gap-1.5 text-[10px] text-muted ml-auto bg-surface-alt px-2 py-0.5 rounded border border-border">
-                        <Loader2 className="h-3 w-3 animate-spin text-brand" />
+                      <span className="flex items-center gap-1.5 text-[10px] text-muted ml-auto bg-[#141127] px-2 py-0.5 rounded border border-[#2A2640]">
+                        <Loader2 className="h-3 w-3 animate-spin text-[#ED6C31]" />
                         Analizando...
                       </span>
                     ) : state.status === "error" ? (
-                      <span className="flex items-center gap-1.5 text-[10px] text-red-500 font-semibold ml-auto bg-red-50/50 dark:bg-red-950/10 px-2 py-0.5 rounded border border-red-200 dark:border-red-900/30">
+                      <span className="flex items-center gap-1.5 text-[10px] text-red-400 font-semibold ml-auto bg-red-950/10 px-2 py-0.5 rounded border border-red-900/30">
                         Fallo
                       </span>
                     ) : (
-                      <span className="text-[10px] uppercase font-mono tracking-wider text-muted ml-auto bg-surface-alt px-2 py-0.5 rounded border border-border">
+                      <span className="text-[10px] uppercase font-mono tracking-wider text-muted ml-auto bg-[#141127] px-2 py-0.5 rounded border border-[#2A2640]">
                         Puntaje: {state.score ?? "N/A"}/100
                       </span>
                     )}
@@ -354,13 +352,13 @@ export default function AuditPage() {
 
                   {state.status === "loading" ? (
                     // Loader Placeholder
-                    <div className="flex items-center gap-3 bg-surface border border-border rounded-xl p-6 text-xs text-muted">
+                    <div className="flex items-center gap-3 bg-[#1C1835] border border-[#2A2640] rounded-xl p-6 text-xs text-muted">
                       <Loader2 className="h-4.5 w-4.5 animate-spin text-brand shrink-0" />
                       <span>Analizando el rendimiento técnico de tu lienzo...</span>
                     </div>
                   ) : state.status === "error" ? (
                     // Category Error Block
-                    <div className="flex items-start justify-between gap-3 bg-red-50/30 border border-red-200/50 text-red-700 dark:bg-red-950/10 dark:border-red-900/20 dark:text-red-400 rounded-xl p-4 text-xs">
+                    <div className="flex items-start justify-between gap-3 bg-red-950/10 border border-red-900/20 text-red-400 rounded-xl p-4 text-xs">
                       <div className="flex gap-2.5 items-start">
                         <AlertCircle className="h-4.5 w-4.5 text-red-500 shrink-0 mt-0.5" />
                         <div>
@@ -370,7 +368,7 @@ export default function AuditPage() {
                       <button
                         type="button"
                         onClick={() => fetchCategory(targetUrl, cat.key)}
-                        className="flex items-center gap-1 px-2.5 py-1 text-[10px] font-bold text-brand hover:text-brand-hover bg-surface dark:bg-zinc-800 border border-border rounded-md shadow-xs cursor-pointer whitespace-nowrap"
+                        className="flex items-center gap-1 px-2.5 py-1 text-[10px] font-bold text-white bg-[#273E92] hover:bg-[#273E92]/95 border border-[#2A2640] rounded-md shadow-xs cursor-pointer whitespace-nowrap"
                       >
                         <RefreshCw className="h-3 w-3" />
                         Reintentar
@@ -378,7 +376,7 @@ export default function AuditPage() {
                     </div>
                   ) : state.recommendations.length === 0 ? (
                     // Approved / Optimized State
-                    <div className="flex items-start gap-3 bg-emerald-50/40 dark:bg-emerald-950/10 border border-emerald-200/50 dark:border-emerald-900/20 text-emerald-700 dark:text-emerald-400 rounded-xl p-4 text-xs">
+                    <div className="flex items-start gap-3 bg-emerald-950/10 border border-emerald-900/20 text-emerald-400 rounded-xl p-4 text-xs">
                       <CheckCircle2 className="h-4.5 w-4.5 text-emerald-500 shrink-0 mt-0.5" />
                       <div>
                         <span className="font-semibold">¡Optimizado!</span> No se encontraron oportunidades de mejora críticas en esta área. Cumple plenamente con las pautas de Google.
@@ -386,25 +384,25 @@ export default function AuditPage() {
                     </div>
                   ) : (
                     // Recommendations list for category
-                    <div className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-2xl overflow-hidden shadow-xs divide-y divide-gray-200 dark:divide-zinc-800 transition-colors duration-200">
+                    <div className="bg-[#1C1835] border border-[#2A2640] rounded-2xl overflow-hidden shadow-xs divide-y divide-[#2A2640] transition-colors duration-200">
                       {state.recommendations.map((rec, index) => (
-                        <div key={rec.id} className="p-4 flex items-start gap-4 hover:bg-zinc-50/50 dark:hover:bg-zinc-900/30 transition-colors duration-150">
+                        <div key={rec.id} className="p-4 flex items-start gap-4 hover:bg-white/5 transition-colors duration-150">
                           {/* Warning Badge with numbering */}
-                          <div className="flex h-6.5 w-6.5 shrink-0 items-center justify-center rounded-lg bg-amber-50 dark:bg-amber-950/20 border border-amber-200/50 dark:border-amber-900/20 text-amber-600 dark:text-amber-400 font-mono text-xs font-bold">
+                          <div className="flex h-6.5 w-6.5 shrink-0 items-center justify-center rounded-lg bg-[#273E92]/20 border border-[#273E92]/30 text-[#ED6C31] font-mono text-xs font-bold">
                             {index + 1}
                           </div>
                           
                           {/* Text content */}
                           <div className="space-y-1">
                             <div className="flex flex-wrap items-center gap-2">
-                              <h5 className="text-xs font-bold text-slate-900 dark:text-slate-100">
+                              <h5 className="text-xs font-bold text-white">
                                 {rec.title}
                               </h5>
-                              <span className="text-[8px] uppercase tracking-wider font-mono px-1 rounded bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 border border-zinc-200/50 dark:border-zinc-800">
+                              <span className="text-[8px] uppercase tracking-wider font-mono px-1 rounded bg-[#141127] text-slate-400 border border-[#2A2640]">
                                 Puntaje: {Math.round(rec.score * 100)}/100
                               </span>
                             </div>
-                            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                            <p className="text-xs text-slate-400 leading-relaxed">
                               {renderDescriptionWithLinks(rec.description)}
                             </p>
                           </div>
@@ -420,7 +418,7 @@ export default function AuditPage() {
 
         {/* Raw JSON verification toggle */}
         {rawJsonCombined && (
-          <div className="space-y-4 pt-4 border-t border-border">
+          <div className="space-y-4 pt-4 border-t border-[#2A2640]">
             <div className="flex items-center justify-between">
               <h4 className="text-xs font-bold uppercase tracking-wider text-muted">
                 Datos de Verificación (JSON)
@@ -428,7 +426,7 @@ export default function AuditPage() {
               <button
                 type="button"
                 onClick={() => setShowRawJson(!showRawJson)}
-                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:text-foreground bg-surface hover:bg-surface-alt border border-border rounded-lg transition-colors cursor-pointer"
+                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-350 hover:text-white bg-[#1C1835] hover:bg-[#1C1835]/90 border border-[#2A2640] rounded-lg transition-colors cursor-pointer"
               >
                 {showRawJson ? (
                   <>
@@ -445,8 +443,8 @@ export default function AuditPage() {
             </div>
 
             {showRawJson && (
-              <div className="border border-border rounded-2xl bg-zinc-50 dark:bg-zinc-900/50 p-6 overflow-hidden animate-slide-down">
-                <pre className="text-xs font-mono text-slate-800 dark:text-slate-200 overflow-x-auto max-h-96 w-full whitespace-pre-wrap leading-relaxed select-all">
+              <div className="border border-[#2A2640] rounded-2xl bg-[#141127]/50 p-6 overflow-hidden animate-slide-down">
+                <pre className="text-xs font-mono text-slate-300 overflow-x-auto max-h-96 w-full whitespace-pre-wrap leading-relaxed select-all">
                   {JSON.stringify(rawJsonCombined, null, 2)}
                 </pre>
               </div>

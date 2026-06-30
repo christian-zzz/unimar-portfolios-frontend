@@ -39,7 +39,7 @@ export default function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
     // Student navigation
     return [
       { name: "Inicio", href: "/dashboard", icon: LayoutDashboard },
-      { name: "Mi Portafolio", href: "#", icon: BookOpen },
+      { name: "Mi Portafolio", href: "/portfolio", icon: BookOpen },
       { name: "Analíticas (GA4)", href: "/analytics", icon: BarChart3 },
       { name: "Auditoría (Lighthouse)", href: "/audit", icon: ShieldAlert },
       { name: "Perfil", href: "/profile", icon: UserIcon },

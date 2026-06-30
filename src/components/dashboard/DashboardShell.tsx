@@ -17,7 +17,7 @@ export default function DashboardShell({ children }: DashboardShellProps) {
 
   if (isLoading) {
     return (
-      <div className="flex h-screen w-screen items-center justify-center bg-zinc-50 dark:bg-zinc-950 font-sans">
+      <div className="flex h-screen w-screen items-center justify-center bg-[#141127] font-sans">
         <div className="flex flex-col items-center gap-3 text-center">
           <Loader2 className="h-8 w-8 animate-spin text-brand" />
           <p className="text-xs text-muted font-medium">Validando sesión...</p>
@@ -27,7 +27,7 @@ export default function DashboardShell({ children }: DashboardShellProps) {
   }
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-zinc-50 dark:bg-zinc-950 font-sans">
+    <div className="flex h-screen w-screen overflow-hidden bg-[#141127] font-sans">
       {/* Desktop Sidebar (hidden on mobile) */}
       <div className="hidden lg:flex lg:shrink-0 h-full">
         <Sidebar />
@@ -37,12 +37,12 @@ export default function DashboardShell({ children }: DashboardShellProps) {
       <MobileSidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
       {/* Main Content Area */}
-      <div className="flex flex-1 flex-col overflow-hidden">
+      <div className="flex flex-1 flex-col overflow-hidden bg-[#141127]">
         {/* Topbar */}
         <Topbar onMenuClick={() => setIsSidebarOpen(true)} />
 
         {/* Content Viewport */}
-        <main className="flex-1 overflow-y-auto px-6 py-8 md:px-8 md:py-10">
+        <main className="flex-1 overflow-y-auto px-6 py-8 md:px-8 md:py-10 bg-[#141127]">
           <div className="mx-auto max-w-5xl w-full">
             {children}
           </div>
