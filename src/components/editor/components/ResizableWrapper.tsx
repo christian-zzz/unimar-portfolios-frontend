@@ -10,7 +10,7 @@ import { useCanvasTransform } from "./CanvasTransformContext";
 interface ResizableWrapperProps {
   width: string;
   height: string;
-  lockAspectRatio?: boolean;
+  lockAspectRatio?: boolean | number;
   children: React.ReactNode;
 }
 

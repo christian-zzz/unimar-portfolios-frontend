@@ -19,7 +19,7 @@ interface PublicViewerProps {
 
 export const PublicViewer = ({ content, settings }: PublicViewerProps) => {
   // Extract custom theme if stored in settings
-  const initialTheme = settings?.theme || undefined;
+  const initialTheme = (settings?.theme as any) || undefined;
 
   return (
     <EditorThemeProvider initialTheme={initialTheme}>

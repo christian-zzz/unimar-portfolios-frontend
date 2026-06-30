@@ -134,7 +134,7 @@ export const Container = ({
       ...paddingStyles,
     };
     return (
-      <div ref={connect} style={rootStyles} className="w-full h-auto">
+      <div ref={(el) => { if (el) connect(el); }} style={rootStyles} className="w-full h-auto">
         {children}
       </div>
     );
@@ -730,7 +730,7 @@ Container.craft = {
     hideOn: [],
   },
   rules: {
-    canDrag: (node) => node.data.props.positionMode !== "free",
+    canDrag: (node: any) => node.data.props.positionMode !== "free",
     canDrop: () => true,
   },
   related: {

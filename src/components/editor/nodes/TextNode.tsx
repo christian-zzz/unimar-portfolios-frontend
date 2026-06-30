@@ -729,7 +729,7 @@ TextNode.craft = {
     hideOn: [],
   },
   rules: {
-    canDrag: (node) => node.data.props.positionMode !== "free",
+    canDrag: (node: any) => node.data.props.positionMode !== "free",
   },
   related: {
     settings: TextSettings,
