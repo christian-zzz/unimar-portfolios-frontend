@@ -21,11 +21,23 @@ import {
   X
 } from "lucide-react";
 
+interface EditorPortfolio {
+  id: string;
+  title: string;
+  slug: string;
+  is_published: boolean;
+  draft_content: unknown;
+  published_content: unknown;
+  settings: unknown;
+  thumbnail_path: string | null;
+  categories?: Array<{ id: string }>;
+}
+
 function EditorWorkspaceContent() {
   const [showTopbar, setShowTopbar] = useState(true);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
   const [viewportWidth, setViewportWidth] = useState<"desktop" | "tablet" | "mobile">("desktop");
-  const [portfolio, setPortfolio] = useState<Record<string, unknown> | null>(null);
+  const [portfolio, setPortfolio] = useState<EditorPortfolio | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const { actions: craftActions } = useEditor();
