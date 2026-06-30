@@ -120,6 +120,7 @@ function EditorWorkspaceContent() {
         
         {/* Extracted Topbar - now inside Editor context */}
         <EditorTopbar
+          portfolio={portfolio}
           portfolioSlug={portfolio?.slug || null}
           isPublished={portfolio?.is_published || false}
           viewportWidth={viewportWidth}
