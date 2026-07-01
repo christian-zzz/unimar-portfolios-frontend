@@ -13,7 +13,19 @@ import {
   Trash2, 
   AlertTriangle,
   RefreshCw,
-  Unlock
+  Unlock,
+  ChevronUp,
+  AlertCircle,
+  Inbox,
+  MoreVertical,
+  ExternalLink,
+  EyeOff,
+  ImageIcon,
+  Key,
+  X,
+  VideoIcon,
+  Sparkles,
+  FileText,
 } from "lucide-react";
 
 interface Student {
