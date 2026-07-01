@@ -16,6 +16,7 @@ import {
   MapPin,
   Radio,
   Clock,
+  Activity,
 } from "lucide-react";
 import Link from "next/link";
 import {
@@ -72,13 +73,32 @@ interface HistoricalData {
   last_updated_at?: string;
 }
 
+interface RealtimeDevice {
+  name: string;
+  value: number;
+}
+
+interface RealtimeCountry {
+  name: string;
+  users: number;
+}
+
+interface RealtimeEvent {
+  name: string;
+  count: number;
+}
+
 interface RealtimeData {
   activeUsers: number;
+  devices: RealtimeDevice[];
+  countries: RealtimeCountry[];
+  events: RealtimeEvent[];
 }
 
 interface AnalyticsData {
   realtime?: RealtimeData;
   historical?: HistoricalData;
+  debug_error?: string;
 }
 
 const CHART_COLORS = ["#ED6C31", "#273E92", "#C5E4E4", "#8E8D9B", "#FFB598"];
@@ -287,6 +307,17 @@ export default function AdminAnalyticsPage() {
         </button>
       </div>
 
+      {/* API Debug Error Banner */}
+      {!isLoading && data?.debug_error && (
+        <div className="flex gap-3 bg-red-950/20 border border-red-900/50 text-red-300 p-4 rounded-2xl text-xs leading-relaxed max-w-4xl">
+          <AlertCircle className="h-5 w-5 text-red-400 shrink-0" />
+          <div>
+            <span className="font-bold block uppercase tracking-wider mb-1">Error de API (Depuración)</span>
+            <span className="font-mono">{data.debug_error}</span>
+          </div>
+        </div>
+      )}
+
       {isLoading ? (
         <div className="flex flex-col items-center justify-center bg-[#1C1835] border border-[#2A2640] rounded-3xl p-16 text-center">
           <Loader2 className="h-8 w-8 animate-spin text-brand mb-4" />
@@ -324,27 +355,159 @@ export default function AdminAnalyticsPage() {
           
           {/* LIVE VIEW */}
           {period === "live" && data.realtime && (
-            <div className="flex items-center justify-center min-h-[300px]">
-              <div className="bg-gradient-to-b from-[#1C1835] to-[#141127] border border-[#2A2640] rounded-3xl p-10 text-center w-full max-w-md">
-                <div className="flex items-center justify-center mb-4">
-                  <Radio className="h-10 w-10 text-[#ED6C31]" />
+            <div className="space-y-6">
+              
+              {/* Row 0: Large Live Active Users Card */}
+              <div className="flex items-center justify-center py-4">
+                <div className="bg-gradient-to-b from-[#1C1835] to-[#141127] border border-[#2A2640] rounded-3xl p-8 text-center w-full max-w-lg shadow-xl">
+                  <div className="flex items-center justify-center mb-4">
+                    <Radio className="h-12 w-12 text-[#ED6C31] animate-pulse" />
+                  </div>
+                  <p className="text-xs font-bold uppercase tracking-wider text-[#8E8D9B] mb-2">
+                    Usuarios Activos en Vivo (Global)
+                  </p>
+                  <p className="text-7xl font-extrabold text-white mb-2 flex items-center justify-center gap-4">
+                    {data.realtime.activeUsers}
+                    {data.realtime.activeUsers > 0 && (
+                      <span className="relative flex h-6 w-6">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                        <span className="relative inline-flex rounded-full h-6 w-6 bg-emerald-500" />
+                      </span>
+                    )}
+                  </p>
+                  <p className="text-xs text-muted">
+                    Usuarios interactuando con la plataforma completa en los últimos 30 minutos
+                  </p>
                 </div>
-                <p className="text-xs font-bold uppercase tracking-wider text-[#8E8D9B] mb-3">
-                  Usuarios en Vivo (Global)
-                </p>
-                <p className="text-6xl font-extrabold text-white mb-3 flex items-center justify-center gap-4">
-                  {data.realtime.activeUsers}
-                  {data.realtime.activeUsers > 0 && (
-                    <span className="relative flex h-5 w-5">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                      <span className="relative inline-flex rounded-full h-5 w-5 bg-emerald-500" />
-                    </span>
-                  )}
-                </p>
-                <p className="text-xs text-muted">
-                  Visitantes activos en toda la plataforma en los últimos 30 minutos
-                </p>
               </div>
+
+              {/* Row 1: Real-time breakdowns (Devices, Events, Countries) */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+                {/* Real-time Devices */}
+                <div className="bg-[#1C1835] border border-[#2A2640] rounded-3xl p-6">
+                  <div className="flex items-center gap-2 mb-4">
+                    <Monitor className="h-4 w-4 text-[#ED6C31]" />
+                    <h3 className="text-sm font-bold text-white uppercase tracking-wider">
+                      Dispositivos en Vivo
+                    </h3>
+                  </div>
+                  {data.realtime.devices.length > 0 ? (
+                    <div className="w-full" style={{ minHeight: 220 }}>
+                      <ResponsiveContainer width="100%" height={220} minHeight={220}>
+                        <PieChart>
+                          <Pie
+                            data={data.realtime.devices}
+                            dataKey="value"
+                            nameKey="name"
+                            cx="50%"
+                            cy="50%"
+                            innerRadius={45}
+                            outerRadius={70}
+                            paddingAngle={3}
+                          >
+                            {data.realtime.devices.map((_, idx) => (
+                              <Cell key={idx} fill={CHART_COLORS[idx % CHART_COLORS.length]} />
+                            ))}
+                          </Pie>
+                          <Tooltip contentStyle={TOOLTIP_STYLE} />
+                          <Legend
+                            verticalAlign="bottom"
+                            height={28}
+                            iconType="circle"
+                            iconSize={8}
+                            formatter={(value: string) => (
+                              <span className="text-[11px] text-[#E5DEFE]">{value}</span>
+                            )}
+                          />
+                        </PieChart>
+                      </ResponsiveContainer>
+                    </div>
+                  ) : (
+                    <div className="flex h-48 items-center justify-center text-xs text-muted">
+                      Esperando visitas...
+                    </div>
+                  )}
+                </div>
+
+                {/* Real-time Events */}
+                <div className="bg-[#1C1835] border border-[#2A2640] rounded-3xl p-6">
+                  <div className="flex items-center gap-2 mb-4">
+                    <Activity className="h-4 w-4 text-[#ED6C31]" />
+                    <h3 className="text-sm font-bold text-white uppercase tracking-wider">
+                      Interacciones en Vivo
+                    </h3>
+                  </div>
+                  {data.realtime.events.length > 0 ? (
+                    <div className="space-y-3 max-h-[220px] overflow-y-auto pr-1">
+                      {(() => {
+                        const evts = data.realtime.events;
+                        return evts.slice(0, 6).map((evt, idx) => {
+                          const maxCount = Math.max(...evts.map(e => e.count));
+                          const pct = maxCount > 0 ? (evt.count / maxCount) * 100 : 0;
+                          return (
+                            <div key={evt.name}>
+                              <div className="flex items-center justify-between text-xs mb-1">
+                                <span className="text-[#E5DEFE] font-medium font-mono truncate max-w-[180px]">
+                                  {evt.name}
+                                </span>
+                                <span className="text-white font-bold">{evt.count}</span>
+                              </div>
+                              <div className="w-full h-1 bg-[#2A2640] rounded-full overflow-hidden">
+                                <div
+                                  className="h-full rounded-full transition-all duration-500"
+                                  style={{
+                                    width: `${Math.max(pct, 2)}%`,
+                                    backgroundColor: CHART_COLORS[idx % CHART_COLORS.length],
+                                  }}
+                                />
+                              </div>
+                            </div>
+                          );
+                        });
+                      })()}
+                    </div>
+                  ) : (
+                    <div className="flex h-48 items-center justify-center text-xs text-muted">
+                      No hay interacciones recientes
+                    </div>
+                  )}
+                </div>
+
+                {/* Real-time Locations */}
+                <div className="bg-[#1C1835] border border-[#2A2640] rounded-3xl p-6">
+                  <div className="flex items-center gap-2 mb-4">
+                    <MapPin className="h-4 w-4 text-[#ED6C31]" />
+                    <h3 className="text-sm font-bold text-white uppercase tracking-wider">
+                      Ubicaciones en Vivo
+                    </h3>
+                  </div>
+                  {data.realtime.countries.length > 0 ? (
+                    <div className="space-y-1 max-h-[220px] overflow-y-auto pr-1">
+                      {data.realtime.countries.slice(0, 6).map((country) => (
+                        <div
+                          key={country.name}
+                          className="flex items-center justify-between py-2 px-3 rounded-xl hover:bg-[#2A2640]/50 transition-colors"
+                        >
+                          <div className="flex items-center gap-2.5 min-w-0">
+                            <span className="text-xs">{getFlag(country.name)}</span>
+                            <span className="text-xs text-[#E5DEFE] font-medium truncate">
+                              {country.name}
+                            </span>
+                          </div>
+                          <span className="text-xs text-white font-bold shrink-0">{country.users}</span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="flex h-48 items-center justify-center text-xs text-muted">
+                      Esperando ubicaciones...
+                    </div>
+                  )}
+                </div>
+
+              </div>
+
             </div>
           )}
 
@@ -511,8 +674,7 @@ export default function AdminAnalyticsPage() {
                   {data.historical.sources.length > 0 ? (
                     <div className="space-y-2">
                       {data.historical.sources.map((source, idx) => {
-                        const srcs = data.historical!.sources;
-                        const maxUsers = Math.max(...srcs.map(s => s.users));
+                        const maxUsers = Math.max(...data.historical.sources.map(s => s.users));
                         const pct = maxUsers > 0 ? (source.users / maxUsers) * 100 : 0;
                         return (
                           <div key={source.name}>
