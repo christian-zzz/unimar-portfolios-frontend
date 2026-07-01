@@ -45,6 +45,7 @@ export const PortfolioCard = ({ portfolio }: PortfolioCardProps) => {
   const getThumbnailUrl = (path: string | null) => {
     if (!path) return null;
     if (path.startsWith("http")) return path;
+    if (path.startsWith("/storage/")) return `${apiUrl}${path}`;
     return `${apiUrl}/storage/${path}`;
   };
 

@@ -5,21 +5,15 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useAuth } from "@/context/AuthContext";
 import RegisterStudent from "@/components/dashboard/RegisterStudent";
+import { showSuccess, showError, confirmAction } from "@/lib/alerts";
 import { 
+  Search,
   Loader2, 
-  AlertCircle, 
-  MoreVertical, 
-  Inbox, 
-  ChevronUp,
-  EyeOff,
-  Key,
-  Trash2,
-  Image as ImageIcon,
-  Video as VideoIcon,
-  Sparkles,
-  FileText,
-  X,
-  ExternalLink
+  BookOpen, 
+  Trash2, 
+  AlertTriangle,
+  RefreshCw,
+  Unlock
 } from "lucide-react";
 
 interface Student {
@@ -150,9 +144,8 @@ export default function StudentsManagementPage() {
 
   // Force unpublish portfolio
   const handleForceUnpublish = async (student: Student) => {
-    if (!confirm(`¿Estás seguro de que deseas forzar la despublicación del portafolio de ${student.name}? Dejará de ser público de inmediato.`)) {
-      return;
-    }
+    const confirmed = await confirmAction(`¿Estás seguro de que deseas forzar la despublicación del portafolio de ${student.name}? Dejará de ser público de inmediato.`);
+    if (!confirmed) return;
 
     const token = localStorage.getItem("token");
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
@@ -167,7 +160,7 @@ export default function StudentsManagementPage() {
       });
 
       if (response.ok) {
-        alert("Portafolio despublicado exitosamente.");
+        showSuccess("Portafolio despublicado exitosamente.");
         if (student.portfolio?.slug) {
           await fetch("/api/revalidate", {
             method: "POST",
@@ -177,7 +170,7 @@ export default function StudentsManagementPage() {
         }
         fetchStudents();
       } else {
-        alert("Error al intentar despublicar el portafolio.");
+        showError("Error al intentar despublicar el portafolio.");
       }
     } catch (err) {
       console.error(err);
@@ -187,9 +180,8 @@ export default function StudentsManagementPage() {
 
   // Reset student password
   const handleResetPassword = async (student: Student) => {
-    if (!confirm(`¿Estás seguro de que deseas restablecer la contraseña de ${student.name}? Se enviará una nueva contraseña provisional a su correo.`)) {
-      return;
-    }
+    const confirmed = await confirmAction(`¿Estás seguro de que deseas restablecer la contraseña de ${student.name}? Se enviará una nueva contraseña provisional a su correo.`);
+    if (!confirmed) return;
 
     const token = localStorage.getItem("token");
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
@@ -205,9 +197,9 @@ export default function StudentsManagementPage() {
 
       if (response.ok) {
         const data = await response.json();
-        alert(`Contraseña restablecida correctamente.\nNueva clave provisional: ${data.generated_password}`);
+        showSuccess(`Contraseña restablecida correctamente.\nNueva clave provisional: ${data.generated_password}`);
       } else {
-        alert("Error al intentar restablecer la contraseña.");
+        showError("Error al intentar restablecer la contraseña.");
       }
     } catch (err) {
       console.error(err);
@@ -217,9 +209,8 @@ export default function StudentsManagementPage() {
 
   // Deep delete student and clear Cloudinary / R2 files
   const handleDeleteStudent = async (student: Student) => {
-    if (!confirm(`⚠️ ALERTA DE SEGURIDAD ⚠️\n¿Estás seguro de que deseas eliminar permanentemente a ${student.name}?\nEsta acción es irreversible y borrará automáticamente todos sus archivos de Cloudinary y Cloudflare R2 para liberar espacio.`)) {
-      return;
-    }
+    const confirmed = await confirmAction(`¿Estás seguro de que deseas eliminar permanentemente a ${student.name}? Esta acción es irreversible y borrará automáticamente todos sus archivos de Cloudinary y Cloudflare R2 para liberar espacio.`);
+    if (!confirmed) return;
 
     const token = localStorage.getItem("token");
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
@@ -234,7 +225,7 @@ export default function StudentsManagementPage() {
       });
 
       if (response.ok) {
-        alert("Estudiante y todos sus archivos asociados eliminados correctamente.");
+        showSuccess("Estudiante y todos sus archivos asociados eliminados correctamente.");
         if (student.portfolio?.slug) {
           await fetch("/api/revalidate", {
             method: "POST",
@@ -244,7 +235,7 @@ export default function StudentsManagementPage() {
         }
         fetchStudents();
       } else {
-        alert("Error al intentar eliminar al estudiante.");
+        showError("Error al intentar eliminar al estudiante.");
       }
     } catch (err) {
       console.error(err);

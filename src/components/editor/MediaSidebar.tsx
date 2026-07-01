@@ -5,6 +5,7 @@ import { useEditor } from "@craftjs/core";
 import { ImageNode } from "./nodes/ImageNode";
 import { VideoNode } from "./nodes/VideoNode";
 import { AnimationNode } from "./nodes/AnimationNode";
+import { showError, confirmAction } from "@/lib/alerts";
 import { 
   Upload, 
   Trash2, 
@@ -222,7 +223,8 @@ export const MediaSidebar = () => {
 
   const handleDelete = async (e: React.MouseEvent, mediaId: string) => {
     e.stopPropagation();
-    if (!confirm("¿Estás seguro de que deseas eliminar este archivo?")) return;
+    const confirmed = await confirmAction("¿Estás seguro de que deseas eliminar este archivo?");
+    if (!confirmed) return;
 
     const token = localStorage.getItem("token");
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
@@ -247,11 +249,11 @@ export const MediaSidebar = () => {
           });
         }
       } else {
-        alert(data.message || "No se pudo eliminar el archivo.");
+        showError(data.message || "No se pudo eliminar el archivo.");
       }
     } catch (err) {
       console.error(err);
-      alert("Error al intentar conectar con el servidor.");
+      showError("Error al intentar conectar con el servidor.");
     }
   };
 

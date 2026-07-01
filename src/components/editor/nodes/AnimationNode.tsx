@@ -5,6 +5,7 @@ import React, { useState, useEffect } from "react";
 import Lottie from "lottie-react";
 import { ResizableWrapper } from "../components/ResizableWrapper";
 import { PositionSettings } from "../components/PositionSettings";
+import { showWarning, showError } from "@/lib/alerts";
 import { 
   Sparkles, 
   Link as LinkIcon, 
@@ -98,7 +99,7 @@ export const AnimationNode = ({
       if (file.name.endsWith(".json") || file.type === "application/json") {
         await uploadAnimationFile(file);
       } else {
-        alert("Solo se permiten archivos JSON de animación (Lottie).");
+        showWarning("Solo se permiten archivos JSON de animación (Lottie).");
       }
     }
   };
@@ -129,11 +130,11 @@ export const AnimationNode = ({
         });
         window.dispatchEvent(new Event("media-uploaded"));
       } else {
-        alert(data.message || "Error al subir la animación.");
+        showError(data.message || "Error al subir la animación.");
       }
     } catch (err) {
       console.error(err);
-      alert("Error de red al subir la animación.");
+      showError("Error de red al subir la animación.");
     } finally {
       setIsUploading(false);
     }

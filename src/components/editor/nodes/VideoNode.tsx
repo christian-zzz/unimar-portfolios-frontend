@@ -4,6 +4,7 @@ import { useNode, useEditor } from "@craftjs/core";
 import React, { useState } from "react";
 import { ResizableWrapper } from "../components/ResizableWrapper";
 import { PositionSettings } from "../components/PositionSettings";
+import { showWarning, showError } from "@/lib/alerts";
 import { 
   Video as VideoIcon, 
   Link as LinkIcon, 
@@ -73,7 +74,7 @@ export const VideoNode = ({
       if (file.type.startsWith("video/")) {
         await uploadVideoFile(file);
       } else {
-        alert("Solo se permiten archivos de video en este componente.");
+        showWarning("Solo se permiten archivos de video en este componente.");
       }
     }
   };
@@ -104,11 +105,11 @@ export const VideoNode = ({
         });
         window.dispatchEvent(new Event("media-uploaded"));
       } else {
-        alert(data.message || "Error al subir el video.");
+        showError(data.message || "Error al subir el video.");
       }
     } catch (err) {
       console.error(err);
-      alert("Error de red al subir el video.");
+      showError("Error de red al subir el video.");
     } finally {
       setIsUploading(false);
     }

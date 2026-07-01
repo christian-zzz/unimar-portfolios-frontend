@@ -4,6 +4,7 @@ import { useNode, useEditor } from "@craftjs/core";
 import React, { useState } from "react";
 import { ResizableWrapper } from "../components/ResizableWrapper";
 import { PositionSettings } from "../components/PositionSettings";
+import { showWarning, showError } from "@/lib/alerts";
 import { 
   Image as ImageIcon, 
   Link as LinkIcon, 
@@ -96,7 +97,7 @@ export const ImageNode = ({
       if (file.type.startsWith("image/")) {
         await uploadImageFile(file);
       } else {
-        alert("Solo se permiten archivos de imagen en este componente.");
+        showWarning("Solo se permiten archivos de imagen en este componente.");
       }
     }
   };
@@ -129,11 +130,11 @@ export const ImageNode = ({
         // Dispatch global event so sidebar gallery automatically updates!
         window.dispatchEvent(new Event("media-uploaded"));
       } else {
-        alert(data.message || "Error al subir la imagen.");
+        showError(data.message || "Error al subir la imagen.");
       }
     } catch (err) {
       console.error(err);
-      alert("Error de red al subir la imagen.");
+      showError("Error de red al subir la imagen.");
     } finally {
       setIsUploading(false);
     }

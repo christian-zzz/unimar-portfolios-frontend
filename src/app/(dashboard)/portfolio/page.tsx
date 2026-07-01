@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { showSuccess, showError, confirmAction } from "@/lib/alerts";
 import { 
   Edit3, 
   Globe, 
@@ -73,6 +74,7 @@ export default function PortfolioHubPage() {
   const getThumbnailUrl = (path: string | null) => {
     if (!path) return null;
     if (path.startsWith("http")) return path;
+    if (path.startsWith("/storage/")) return `${apiUrl}${path}`;
     return `${apiUrl}/storage/${path}`;
   };
 
@@ -244,7 +246,7 @@ export default function PortfolioHubPage() {
         }).catch(err => console.error("Failed to revalidate path caches:", err));
       }
 
-      alert("¡Portafolio publicado y configuración guardada exitosamente!");
+      showSuccess("¡Portafolio publicado y configuración guardada exitosamente!");
     } catch (err) {
       console.error(err);
       setErrorMessage("Error de red al intentar guardar la configuración de publicación.");
@@ -255,9 +257,8 @@ export default function PortfolioHubPage() {
 
   // Handle Unpublish
   const handleUnpublish = async () => {
-    if (!confirm("¿Estás seguro de que deseas retirar tu portafolio del aire? Dejará de ser accesible para el público de inmediato.")) {
-      return;
-    }
+    const confirmed = await confirmAction("¿Estás seguro de que deseas retirar tu portafolio del aire? Dejará de ser accesible para el público de inmediato.");
+    if (!confirmed) return;
 
     setIsUnpublishing(true);
     const token = localStorage.getItem("token");
@@ -283,13 +284,13 @@ export default function PortfolioHubPage() {
           }).catch(err => console.error("Failed to revalidate path caches:", err));
         }
 
-        alert("Tu portafolio ha sido retirado del aire. Ahora está en modo Borrador.");
+        showSuccess("Tu portafolio ha sido retirado del aire. Ahora está en modo Borrador.");
       } else {
-        alert("Ocurrió un error al retirar el portafolio.");
+        showError("Ocurrió un error al retirar el portafolio.");
       }
     } catch (err) {
       console.error(err);
-      alert("Error de conexión al intentar despublicar el portafolio.");
+      showError("Error de conexión al intentar despublicar el portafolio.");
     } finally {
       setIsUnpublishing(false);
     }
@@ -356,9 +357,8 @@ export default function PortfolioHubPage() {
 
   // Handle Media Deletion
   const handleDeleteMedia = async (id: string) => {
-    if (!confirm("¿Estás seguro de que deseas eliminar este archivo permanentemente? Si está siendo usado en tu lienzo, se romperá.")) {
-      return;
-    }
+    const confirmed = await confirmAction("¿Estás seguro de que deseas eliminar este archivo permanentemente? Si está siendo usado en tu lienzo, se romperá.");
+    if (!confirmed) return;
 
     const token = localStorage.getItem("token");
     try {
@@ -373,11 +373,11 @@ export default function PortfolioHubPage() {
       if (response.ok) {
         setMediaList((prev) => prev.filter((item) => item.id !== id));
       } else {
-        alert("No se pudo eliminar el archivo.");
+        showError("No se pudo eliminar el archivo.");
       }
     } catch (err) {
       console.error(err);
-      alert("Error de conexión al intentar eliminar el archivo.");
+      showError("Error de conexión al intentar eliminar el archivo.");
     }
   };
 

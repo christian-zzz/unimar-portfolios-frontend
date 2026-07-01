@@ -3,6 +3,7 @@
 import React from "react";
 import { useEditor } from "@craftjs/core";
 import Link from "next/link";
+import { showSuccess, showError } from "@/lib/alerts";
 import { 
   ArrowLeft, 
   Save, 
@@ -76,7 +77,7 @@ export const EditorTopbar = ({
       }
     } catch (err) {
       console.error(err);
-      alert("Error de red al intentar guardar el borrador.");
+      showError("Error de red al intentar guardar el borrador.");
     } finally {
       setIsSaving(false);
     }
@@ -124,11 +125,11 @@ export const EditorTopbar = ({
         }).catch(err => console.error("Failed to revalidate:", err));
       }
 
-      alert(`¡Felicidades! Tu portafolio ha sido publicado exitosamente.`);
+      showSuccess("¡Felicidades! Tu portafolio ha sido publicado exitosamente.");
       setIsPublishModalOpen(false);
     } catch (err) {
       console.error(err);
-      alert("Error de red al intentar publicar el portafolio.");
+      showError("Error de red al intentar publicar el portafolio.");
     } finally {
       setIsPublishing(false);
     }
