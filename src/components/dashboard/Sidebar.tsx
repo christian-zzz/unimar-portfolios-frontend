@@ -27,6 +27,7 @@ export default function Sidebar() {
       return [
         { name: "Inicio", href: "/dashboard", icon: LayoutDashboard },
         { name: "Gestión de Estudiantes", href: "/students", icon: Users },
+        { name: "Analíticas Globales", href: "/admin/analytics", icon: BarChart3 },
         { name: "Perfil", href: "/profile", icon: UserIcon },
         { name: "Configuración", href: "#", icon: Settings },
       ];

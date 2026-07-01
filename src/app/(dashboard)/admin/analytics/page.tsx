@@ -114,7 +114,7 @@ function SummaryCard({ label, value, subtext, icon: Icon, pulse }: { label: stri
   );
 }
 
-export default function AnalyticsPage() {
+export default function AdminAnalyticsPage() {
   const { user } = useAuth();
   
   const [isLoading, setIsLoading] = useState(true);
@@ -130,7 +130,7 @@ export default function AnalyticsPage() {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
     try {
-      const response = await fetch(`${apiUrl}/api/analytics/report`, {
+      const response = await fetch(`${apiUrl}/api/admin/analytics/report`, {
         method: "GET",
         headers: {
           "Accept": "application/json",
@@ -139,10 +139,14 @@ export default function AnalyticsPage() {
         },
       });
 
+      if (response.status === 403) {
+        throw new Error("No tienes permisos de administrador para ver esta página.");
+      }
+
       const resData = await response.json();
 
       if (!response.ok) {
-        throw new Error(resData.error || resData.message || "Error al obtener las analíticas.");
+        throw new Error(resData.error || resData.message || "Error al obtener las analíticas globales.");
       }
 
       setData(resData);
@@ -178,10 +182,10 @@ export default function AnalyticsPage() {
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between border-b border-[#2A2640] pb-6">
           <div>
             <h1 className="text-3xl font-bold tracking-tight text-white">
-              Analíticas del Portafolio
+              Analíticas Globales
             </h1>
             <p className="text-sm text-muted mt-2 leading-relaxed">
-              Visualización en tiempo real sobre el tráfico y comportamiento de visitas de tu portafolio.
+              Métricas agregadas de toda la plataforma. Tráfico combinado de todos los portafolios y la página de inicio.
             </p>
           </div>
           
@@ -201,10 +205,10 @@ export default function AnalyticsPage() {
         <div className="flex flex-col items-center justify-center bg-[#1C1835] border border-[#2A2640] rounded-3xl p-16 text-center">
           <Loader2 className="h-8 w-8 animate-spin text-brand mb-4" />
           <p className="text-sm font-semibold text-white">
-            Cargando analíticas...
+            Cargando analíticas globales...
           </p>
           <p className="text-xs text-muted mt-1">
-            Conectando con Google Analytics y estructurando los datos de rendimiento.
+            Consultando datos agregados de Google Analytics.
           </p>
         </div>
       ) : error ? (
@@ -276,14 +280,14 @@ export default function AnalyticsPage() {
             <div className="flex flex-col gap-1 md:flex-row md:items-center md:justify-between mb-6">
               <div>
                 <h3 className="text-sm font-bold text-white uppercase tracking-wider">
-                  Tráfico de Audiencia (Últimos 15 días)
+                  Tráfico Global (Últimos 15 días)
                 </h3>
                 <p className="text-xs text-muted">
-                  Evolución diaria de visitas y usuarios únicos registrados.
+                  Evolución diaria de visitas en toda la plataforma.
                 </p>
               </div>
               <div className="pt-2 md:pt-0 text-[10px] text-muted">
-                Datos para: <strong className="text-white">{user?.name}</strong>
+                Administrador: <strong className="text-white">{user?.name}</strong>
               </div>
             </div>
 
