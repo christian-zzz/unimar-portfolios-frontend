@@ -10,7 +10,10 @@ import {
   AlertCircle,
   TrendingUp,
   Percent,
-  RefreshCw
+  RefreshCw,
+  Monitor,
+  Globe,
+  MapPin,
 } from "lucide-react";
 import Link from "next/link";
 import {
@@ -21,13 +24,33 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  Legend
+  Legend,
+  PieChart,
+  Pie,
+  Cell,
 } from "recharts";
 
 interface DailyData {
   date: string;
   users: number;
   views: number;
+  newUsers: number;
+  avgDuration: number;
+}
+
+interface DeviceItem {
+  name: string;
+  value: number;
+}
+
+interface SourceItem {
+  name: string;
+  users: number;
+}
+
+interface CountryItem {
+  name: string;
+  users: number;
 }
 
 interface AnalyticsData {
@@ -35,8 +58,46 @@ interface AnalyticsData {
     activeUsers: number;
     screenPageViews: number;
     bounceRate: string;
+    newUsers: number;
+    averageSessionDuration: number;
   };
   daily: DailyData[];
+  devices: DeviceItem[];
+  sources: SourceItem[];
+  countries: CountryItem[];
+}
+
+const CHART_COLORS = ["#ED6C31", "#273E92", "#C5E4E4", "#8E8D9B", "#FFB598"];
+const TOOLTIP_STYLE = {
+  backgroundColor: '#141127',
+  borderRadius: '12px',
+  border: '1px solid #2A2640',
+  fontSize: '11px',
+  color: '#ffffff',
+};
+
+function SummaryCard({ label, value, subtext, icon: Icon }: { label: string; value: string | number; subtext: string; icon: React.ElementType }) {
+  return (
+    <div className="bg-gradient-to-b from-[#1C1835] to-[#141127] border border-[#2A2640] rounded-2xl p-6 transition-colors duration-200">
+      <div className="flex items-center justify-between">
+        <div className="min-w-0">
+          <p className="text-xs font-bold uppercase tracking-wider text-[#8E8D9B] truncate">
+            {label}
+          </p>
+          <h3 className="text-3xl font-extrabold text-white mt-2">
+            {value}
+          </h3>
+          <p className="text-[10px] text-emerald-400 font-semibold flex items-center gap-1 mt-1">
+            <TrendingUp className="h-3 w-3 text-[#ED6C31] shrink-0" />
+            <span className="truncate">{subtext}</span>
+          </p>
+        </div>
+        <div className="h-12 w-12 rounded-xl bg-[#273E92]/20 border border-[#273E92]/30 text-white flex items-center justify-center shrink-0 ml-3">
+          <Icon className="h-5.5 w-5.5 text-[#ED6C31]" />
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default function AnalyticsPage() {
@@ -67,7 +128,7 @@ export default function AnalyticsPage() {
       const resData = await response.json();
 
       if (!response.ok) {
-        throw new Error(resData.error || resData.message || "Error al obtener las analíticas simuladas.");
+        throw new Error(resData.error || resData.message || "Error al obtener las analíticas.");
       }
 
       setData(resData);
@@ -83,9 +144,7 @@ export default function AnalyticsPage() {
     }
   };
 
-  // Fetch report automatically on mount
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsMounted(true);
     fetchReport();
   }, []);
@@ -108,7 +167,7 @@ export default function AnalyticsPage() {
               Analíticas del Portafolio
             </h1>
             <p className="text-sm text-muted mt-2 leading-relaxed">
-              Visualización interactiva en tiempo real sobre el tráfico y comportamiento de visitas de tu portafolio.
+              Visualización en tiempo real sobre el tráfico y comportamiento de visitas de tu portafolio.
             </p>
           </div>
           
@@ -131,7 +190,7 @@ export default function AnalyticsPage() {
             Cargando analíticas...
           </p>
           <p className="text-xs text-muted mt-1">
-            Conectando con la API y estructurando los datos de rendimiento.
+            Conectando con Google Analytics y estructurando los datos de rendimiento.
           </p>
         </div>
       ) : error ? (
@@ -157,74 +216,41 @@ export default function AnalyticsPage() {
       ) : data ? (
         <div className="space-y-6 animate-slide-down">
           
-          {/* Card Summary Hub (3 Cards) */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            
-            {/* Metric 1: Active Users */}
-            <div className="bg-gradient-to-b from-[#1C1835] to-[#141127] border border-[#2A2640] rounded-2xl p-6 transition-colors duration-200">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-bold uppercase tracking-wider text-[#8E8D9B]">
-                    Usuarios Activos (15 días)
-                  </p>
-                  <h3 className="text-3xl font-extrabold text-white mt-2">
-                    {data.totals.activeUsers}
-                  </h3>
-                  <p className="text-[10px] text-emerald-400 font-semibold flex items-center gap-1 mt-1">
-                    <TrendingUp className="h-3 w-3 text-[#ED6C31]" />
-                    Visitantes únicos interactuando
-                  </p>
-                </div>
-                <div className="h-12 w-12 rounded-xl bg-[#273E92]/20 border border-[#273E92]/30 text-white flex items-center justify-center">
-                  <Users className="h-5.5 w-5.5 text-[#ED6C31]" />
-                </div>
-              </div>
-            </div>
-
-            {/* Metric 2: Page Views */}
-            <div className="bg-gradient-to-b from-[#1C1835] to-[#141127] border border-[#2A2640] rounded-2xl p-6 transition-colors duration-200">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-bold uppercase tracking-wider text-[#8E8D9B]">
-                    Vistas de Página (15 días)
-                  </p>
-                  <h3 className="text-3xl font-extrabold text-white mt-2">
-                    {data.totals.screenPageViews}
-                  </h3>
-                  <p className="text-[10px] text-emerald-400 font-semibold flex items-center gap-1 mt-1">
-                    <TrendingUp className="h-3 w-3 text-[#ED6C31]" />
-                    Visualizaciones totales de contenido
-                  </p>
-                </div>
-                <div className="h-12 w-12 rounded-xl bg-[#273E92]/20 border border-[#273E92]/30 text-white flex items-center justify-center">
-                  <Eye className="h-5.5 w-5.5 text-[#ED6C31]" />
-                </div>
-              </div>
-            </div>
-
-            {/* Metric 3: Bounce Rate */}
-            <div className="bg-gradient-to-b from-[#1C1835] to-[#141127] border border-[#2A2640] rounded-2xl p-6 transition-colors duration-200">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-bold uppercase tracking-wider text-[#8E8D9B]">
-                    Tasa de Rebote
-                  </p>
-                  <h3 className="text-3xl font-extrabold text-white mt-2">
-                    {data.totals.bounceRate}
-                  </h3>
-                  <p className="text-[10px] text-muted font-semibold flex items-center gap-1 mt-1">
-                    Porcentaje de sesiones de una sola página
-                  </p>
-                </div>
-                <div className="h-12 w-12 rounded-xl bg-[#273E92]/20 border border-[#273E92]/30 text-white flex items-center justify-center">
-                  <Percent className="h-5.5 w-5.5 text-[#ED6C31]" />
-                </div>
-              </div>
-            </div>
-
+          {/* Row 1: Summary Cards (5 Cards) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+            <SummaryCard
+              label="Usuarios Activos (15d)"
+              value={data.totals.activeUsers}
+              subtext="Visitantes únicos"
+              icon={Users}
+            />
+            <SummaryCard
+              label="Vistas de Página (15d)"
+              value={data.totals.screenPageViews}
+              subtext="Visualizaciones totales"
+              icon={Eye}
+            />
+            <SummaryCard
+              label="Tasa de Rebote"
+              value={data.totals.bounceRate}
+              subtext="Sesiones de una sola página"
+              icon={Percent}
+            />
+            <SummaryCard
+              label="Nuevos Usuarios"
+              value={data.totals.newUsers}
+              subtext="Primera visita"
+              icon={Users}
+            />
+            <SummaryCard
+              label="Duración Media"
+              value={formatDuration(data.totals.averageSessionDuration)}
+              subtext="Tiempo por sesión"
+              icon={TrendingUp}
+            />
           </div>
 
-          {/* Interactive Chart Container */}
+          {/* Row 2: Daily Traffic Chart */}
           <div className="bg-[#1C1835] border border-[#2A2640] rounded-3xl p-6 transition-colors duration-200">
             <div className="flex flex-col gap-1 md:flex-row md:items-center md:justify-between mb-6">
               <div>
@@ -236,7 +262,7 @@ export default function AnalyticsPage() {
                 </p>
               </div>
               <div className="pt-2 md:pt-0 text-[10px] text-muted">
-                Visualizando datos para: <strong className="text-white">{user?.name}</strong>
+                Datos para: <strong className="text-white">{user?.name}</strong>
               </div>
             </div>
 
@@ -261,16 +287,7 @@ export default function AnalyticsPage() {
                       tickLine={false}
                       axisLine={false}
                     />
-                    <Tooltip 
-                      contentStyle={{ 
-                        backgroundColor: '#141127',
-                        borderRadius: '12px',
-                        border: '1px solid #2A2640',
-                        fontSize: '11px',
-                        color: '#ffffff'
-                      }}
-                      labelClassName="font-bold text-white"
-                    />
+                    <Tooltip contentStyle={TOOLTIP_STYLE} labelClassName="font-bold text-white" />
                     <Legend 
                       verticalAlign="top" 
                       height={36} 
@@ -299,9 +316,177 @@ export default function AnalyticsPage() {
             </div>
           </div>
 
+          {/* Row 3: Bottom Grid — Devices, Sources, Countries */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+            {/* Devices PieChart */}
+            <div className="bg-[#1C1835] border border-[#2A2640] rounded-3xl p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <Monitor className="h-4 w-4 text-[#ED6C31]" />
+                <h3 className="text-sm font-bold text-white uppercase tracking-wider">
+                  Dispositivos
+                </h3>
+              </div>
+              {data.devices.length > 0 ? (
+                <div className="w-full h-64">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={data.devices}
+                        dataKey="value"
+                        nameKey="name"
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={50}
+                        outerRadius={80}
+                        paddingAngle={3}
+                      >
+                        {data.devices.map((_, idx) => (
+                          <Cell key={idx} fill={CHART_COLORS[idx % CHART_COLORS.length]} />
+                        ))}
+                      </Pie>
+                      <Tooltip contentStyle={TOOLTIP_STYLE} />
+                      <Legend
+                        verticalAlign="bottom"
+                        height={28}
+                        iconType="circle"
+                        iconSize={8}
+                        formatter={(value: string) => (
+                          <span className="text-[11px] text-[#E5DEFE]">{value}</span>
+                        )}
+                      />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+              ) : (
+                <div className="flex h-48 items-center justify-center text-xs text-muted">
+                  Sin datos de dispositivos
+                </div>
+              )}
+            </div>
+
+            {/* Traffic Sources */}
+            <div className="bg-[#1C1835] border border-[#2A2640] rounded-3xl p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <Globe className="h-4 w-4 text-[#ED6C31]" />
+                <h3 className="text-sm font-bold text-white uppercase tracking-wider">
+                  Fuentes de Tráfico
+                </h3>
+              </div>
+              {data.sources.length > 0 ? (
+                <div className="space-y-2">
+                  {data.sources.map((source, idx) => {
+                    const maxUsers = Math.max(...data.sources.map(s => s.users));
+                    const pct = maxUsers > 0 ? (source.users / maxUsers) * 100 : 0;
+                    return (
+                      <div key={source.name}>
+                        <div className="flex items-center justify-between text-xs mb-1">
+                          <span className="text-[#E5DEFE] font-medium capitalize truncate">
+                            {source.name}
+                          </span>
+                          <span className="text-white font-bold">{source.users}</span>
+                        </div>
+                        <div className="w-full h-1.5 bg-[#2A2640] rounded-full overflow-hidden">
+                          <div
+                            className="h-full rounded-full transition-all duration-500"
+                            style={{
+                              width: `${Math.max(pct, 2)}%`,
+                              backgroundColor: CHART_COLORS[idx % CHART_COLORS.length],
+                            }}
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="flex h-48 items-center justify-center text-xs text-muted">
+                  Sin datos de fuentes
+                </div>
+              )}
+            </div>
+
+            {/* Countries */}
+            <div className="bg-[#1C1835] border border-[#2A2640] rounded-3xl p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <MapPin className="h-4 w-4 text-[#ED6C31]" />
+                <h3 className="text-sm font-bold text-white uppercase tracking-wider">
+                  Ubicaciones
+                </h3>
+              </div>
+              {data.countries.length > 0 ? (
+                <div className="space-y-1">
+                  {data.countries.slice(0, 6).map((country, idx) => (
+                    <div
+                      key={country.name}
+                      className="flex items-center justify-between py-2 px-3 rounded-xl hover:bg-[#2A2640]/50 transition-colors"
+                    >
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <span className="text-xs">{getFlag(country.name)}</span>
+                        <span className="text-xs text-[#E5DEFE] font-medium truncate">
+                          {country.name}
+                        </span>
+                      </div>
+                      <span className="text-xs text-white font-bold shrink-0">{country.users}</span>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex h-48 items-center justify-center text-xs text-muted">
+                  Sin datos de ubicaciones
+                </div>
+              )}
+            </div>
+
+          </div>
+
         </div>
       ) : null}
 
     </div>
   );
+}
+
+function formatDuration(seconds: number): string {
+  if (!seconds || seconds <= 0) return "0s";
+  if (seconds < 60) return `${Math.round(seconds)}s`;
+  const min = Math.floor(seconds / 60);
+  const sec = Math.round(seconds % 60);
+  return `${min}m ${sec}s`;
+}
+
+function getFlag(countryName: string): string {
+  const flags: Record<string, string> = {
+    "Venezuela": "🇻🇪",
+    "United States": "🇺🇸",
+    "Mexico": "🇲🇽",
+    "Colombia": "🇨🇴",
+    "Spain": "🇪🇸",
+    "Argentina": "🇦🇷",
+    "Chile": "🇨🇱",
+    "Peru": "🇵🇪",
+    "Ecuador": "🇪🇨",
+    "Brazil": "🇧🇷",
+    "Dominican Republic": "🇩🇴",
+    "Costa Rica": "🇨🇷",
+    "Panama": "🇵🇦",
+    "Uruguay": "🇺🇾",
+    "Guatemala": "🇬🇹",
+    "Honduras": "🇭🇳",
+    "Bolivia": "🇧🇴",
+    "Paraguay": "🇵🇾",
+    "El Salvador": "🇸🇻",
+    "Nicaragua": "🇳🇮",
+    "Canada": "🇨🇦",
+    "United Kingdom": "🇬🇧",
+    "Germany": "🇩🇪",
+    "France": "🇫🇷",
+    "Italy": "🇮🇹",
+    "Portugal": "🇵🇹",
+    "Netherlands": "🇳🇱",
+    "Japan": "🇯🇵",
+    "China": "🇨🇳",
+    "India": "🇮🇳",
+  };
+  return flags[countryName] || "🌍";
 }
