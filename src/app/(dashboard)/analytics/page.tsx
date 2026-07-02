@@ -674,7 +674,7 @@ export default function AnalyticsPage() {
                   {data.historical.sources.length > 0 ? (
                     <div className="space-y-2">
                       {data.historical.sources.map((source, idx) => {
-                        const maxUsers = Math.max(...data.historical.sources.map(s => s.users));
+                        const maxUsers = Math.max(...data.historical!.sources.map(s => s.users));
                         const pct = maxUsers > 0 ? (source.users / maxUsers) * 100 : 0;
                         return (
                           <div key={source.name}>
